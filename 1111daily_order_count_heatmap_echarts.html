@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
+</head>
+<body>
+<div id="chart1" style="width: 600px; height: 400px;"></div>
+<div id="chart2" style="width: 600px; height: 400px;"></div>
+<div id="chart3" style="width: 600px; height: 400px;"></div>
+<script type="text/javascript">
+    // Data
+    var dailyOrdersData = [
+        {"day_of_month": 1, "total_daily_orders": 220},
+        {"day_of_month": 2, "total_daily_orders": 309},
+        {"day_of_month": 3, "total_daily_orders": 1578},
+        {"day_of_month": 4, "total_daily_orders": 167},
+        {"day_of_month": 5, "total_daily_orders": 239},
+        {"day_of_month": 6, "total_daily_orders": 234},
+        {"day_of_month": 7, "total_daily_orders": 246}
+    ];
+
+    var heatmapData = [
+        {"day": 1, "2018-05-01": 105, "2018-05-02": 255, "2018-05-03": 310, "2018-05-04": 405, "2018-05-05": 510, "2018-05-06": 610, "2018-05-07": 710},
+        {"day": 2, "2018-05-01": 154, "2018-05-02": 215, "2018-05-03": 315, "2018-05-04": 405, "2018-05-05": 510, "2018-05-06": 610, "2018-05-07": 710},
+        {"day": 3, "2018-05-01": 208, "2018-05-02": 310, "2018-05-03": 410, "2018-05-04": 510, "2018-05-05": 610, "2018-05-06": 710, "2018-05-07": 810},
+        {"day": 4, "2018-05-01": 255, "2018-05-02": 351, "2018-05-03": 415, "2018-05-04": 515, "2018-05-05": 615, "2018-05-06": 715, "2018-05-07": 815},
+        {"day": 5, "2018-05-01": 308, "2018-05-02": 410, "2018-05-03": 510, "2018-05-04": 610, "2018-05-05": 710, "2018-05-06": 810, "2018-05-07": 910},
+        {"day": 6, "2018-05-01": 325, "2018-05-02": 415, "2018-05-03": 515, "2018-05-04": 615, "2018-05-05": 715, "2018-05-06": 815, "2018-05-07": 915},
+        {"day": 7, "2018-05-01": 440, "2018-05-02": 510, "2018-05-03": 610, "2018-05-04": 710, "2018-05-05": 810, "2018-05-06": 910, "2018-05-07": 1010}
+    ];
+
+    var monthlyOrdersData = [
+        {"month": "2018-01", "order_count": 500},
+        {"month": "2018-02", "order_count": 600},
+        {"month": "2018-03", "order_count": 700},
+        {"month": "2018-04", "order_count": 800},
+        {"month": "2018-05", "order_count": 900}
+    ];
+
+    // Generate heatmap
+    var days = heatmapData.map(item => item.day);
+    var dates = Object.keys(heatmapData[0]).filter(key => key !== 'day');
+    var values = [];
+    heatmapData.forEach(item => {
+        dates.forEach(date => {
+            values.push([dates.indexOf(date), item.day - 1, item[date]]);
+        });
+    });
+
+    var chart2 = echarts.init(document.getElementById('chart2'));
+    var option2 = {
+        title: { text: 'Daily Order Count Heatmap for May' },
+        tooltip: {},
+        xAxis: { type: 'category', data: dates },
+        yAxis: { type: 'category', data: days },
+        visualMap: { min: 0, max: Math.max(...values.map(v => v[2])), calculable: true, orient: 'horizontal', left: 'center', bottom: '15%' },
+        series: [{
+            name: 'Order Count',
+            type: 'heatmap',
+            data: values,
+            label: { show: true }
+        }]
+    };
+    chart2.setOption(option2);
+</script>
+</body>
+</html>
